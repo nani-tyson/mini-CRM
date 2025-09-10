@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 
 //routes
 import authRoutes from './routes/authRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
 
 const app = express();
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/customers', customerRoutes);
 
 app.listen(PORT, async () => {
   connectDB(process.env.MONGO_URI);
