@@ -7,6 +7,7 @@ import {
   updateCustomer,
   deleteCustomer,
 } from '../controllers/customerController.js';
+import LeadRouter from './leadRoutes.js'
 
 const router = express.Router();
 
@@ -20,5 +21,8 @@ router.route('/:id')
   .get(protect, getCustomerById)
   .put(protect, updateCustomer)
   .delete(protect, deleteCustomer);
+
+// Integrate LeadRoutes for handling leads related to a specific customer
+router.use('/:customerId/leads', LeadRouter);
 
 export default router;
