@@ -22,16 +22,51 @@ export const createCustomer = async (req, res) => {
   }
 };
 
-// @desc    Get all customers for a user
+// @desc    Get all customers for a user with search and pagination
 // @route   GET /api/customers
 // @access  Private
 export const getCustomers = async (req, res) => {
   try {
-    // Find customers that belong to the logged-in user
-    const customers = await Customer.find({ user: req.user.id });
-    res.json(customers);
+    const limit = parseInt(req.query.limit) || 10; // Items per page
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const search = req.query.search || ''; // Search query
+
+    // Base query to find customers belonging to the logged-in user
+    let query = {
+      user: req.user.id,
+    };
+
+    // If a search term is provided, add it to the query
+    // This will search for the term in the 'name' and 'email' fields, case-insensitively
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+    
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Get the total number of documents that match the query
+    const total = await Customer.countDocuments(query);
+
+    // Find the customers with the applied query, skip, and limit
+    const customers = await Customer.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 }); // Sort by newest first
+
+    // Send the response with customers and pagination metadata
+    res.json({
+      customers,
+      page,
+      pages: Math.ceil(total / limit), // Total number of pages
+      total, // Total number of customers matching query
+    });
   } catch (error) {
-     res.status(500).json({ message: 'Server Error' });
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
