@@ -39,8 +39,11 @@ export const registerUser = async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(201).json({
-      name: user.name,
-      email: user.email,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
       token,
     });
   } catch (err) {
@@ -71,7 +74,11 @@ export const loginUser = async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(200).json({
-      email: user.email,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
       token,
     });
   } catch (err) {
