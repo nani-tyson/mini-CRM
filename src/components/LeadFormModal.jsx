@@ -8,7 +8,6 @@ const LeadFormModal = ({ isOpen, onClose, onSubmit, leadToEdit }) => {
         value: 0,
     });
 
-    // If we pass a lead to edit, populate the form with its data
     useEffect(() => {
         if (leadToEdit) {
             setFormData({
@@ -18,7 +17,6 @@ const LeadFormModal = ({ isOpen, onClose, onSubmit, leadToEdit }) => {
                 value: leadToEdit.value,
             });
         } else {
-            // Otherwise, reset the form for adding a new lead
             setFormData({ title: '', description: '', status: 'New', value: 0 });
         }
     }, [leadToEdit, isOpen]);
@@ -36,26 +34,26 @@ const LeadFormModal = ({ isOpen, onClose, onSubmit, leadToEdit }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
+            <div className="bg-slate-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-slate-700">
+                <h2 className="text-2xl font-bold mb-4 text-white">
                     {leadToEdit ? 'Edit Lead' : 'Add New Lead'}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-4">
-                        <input name="title" value={formData.title} onChange={handleChange} placeholder="Lead Title" required className="w-full p-2 border rounded"/>
-                        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" required className="w-full p-2 border rounded h-24"></textarea>
-                        <select name="status" value={formData.status} onChange={handleChange} className="w-full p-2 border rounded">
+                        <input name="title" value={formData.title} onChange={handleChange} placeholder="Lead Title" required className="w-full p-2 bg-slate-700 border border-slate-600 rounded text-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500" />
+                        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" required className="w-full p-2 bg-slate-700 border border-slate-600 rounded text-slate-200 h-24 focus:ring-2 focus:ring-sky-500 focus:border-sky-500"></textarea>
+                        <select name="status" value={formData.status} onChange={handleChange} className="w-full p-2 bg-slate-700 border border-slate-600 rounded text-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
                             <option value="New">New</option>
                             <option value="Contacted">Contacted</option>
                             <option value="Converted">Converted</option>
                             <option value="Lost">Lost</option>
                         </select>
-                        <input name="value" type="number" value={formData.value} onChange={handleChange} placeholder="Value" required className="w-full p-2 border rounded"/>
+                        <input name="value" type="number" value={formData.value} onChange={handleChange} placeholder="Value" required className="w-full p-2 bg-slate-700 border border-slate-600 rounded text-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500" />
                     </div>
                     <div className="mt-6 flex justify-end space-x-4">
-                        <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <button type="button" onClick={onClose} className="px-4 py-2 bg-slate-600 text-slate-200 rounded-md hover:bg-slate-500">Cancel</button>
+                        <button type="submit" className="px-4 py-2 bg-sky-500 text-white rounded-md hover:bg-sky-600">
                             {leadToEdit ? 'Save Changes' : 'Add Lead'}
                         </button>
                     </div>
