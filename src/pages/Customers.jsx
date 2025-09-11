@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
     useGetCustomersQuery,
     useAddCustomerMutation,
@@ -82,7 +83,11 @@ const Customers = () => {
                         <tbody className="text-gray-700">
                             {data.customers.map((customer) => (
                                 <tr key={customer._id} className="border-b hover:bg-gray-100">
-                                    <td className="py-3 px-4">{customer.name}</td>
+                                    <td className="py-3 px-4">
+                                        <Link to={`/customers/${customer._id}`} className="text-blue-600 hover:underline font-semibold">
+                                            {customer.name}
+                                        </Link>
+                                    </td>
                                     <td className="py-3 px-4">{customer.email}</td>
                                     <td className="py-3 px-4">{customer.phone}</td>
                                     <td className="py-3 px-4">
@@ -99,7 +104,9 @@ const Customers = () => {
                 <div className="md:hidden space-y-4">
                     {data.customers.map((customer) => (
                         <div key={customer._id} className="bg-white p-4 rounded-lg shadow">
-                            <h3 className="text-lg font-bold">{customer.name}</h3>
+                            <Link to={`/customers/${customer._id}`}>
+                                <h3 className="text-lg font-bold text-blue-600 hover:underline">{customer.name}</h3>
+                            </Link>
                             <p className="text-sm text-gray-600 break-all">{customer.email}</p>
                             <p className="text-sm text-gray-600">{customer.phone}</p>
                             <div className="mt-4 flex justify-end space-x-4">
@@ -115,7 +122,6 @@ const Customers = () => {
 
     return (
         <div>
-            {/* --- RESPONSIVE HEADER SECTION --- */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <h1 className="text-2xl font-bold">Customer Management</h1>
                 <button onClick={handleAddClick} className="w-full md:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
@@ -129,7 +135,6 @@ const Customers = () => {
             
             {data?.customers.length === 0 && !isLoading ? <p className="text-center mt-8">No customers found. Add one to get started!</p> : content}
             
-            {/* --- RESPONSIVE PAGINATION --- */}
             {!isLoading && data && data.pages > 1 && (
                  <div className="flex flex-col md:flex-row justify-between items-center mt-4 gap-4">
                     <button onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1} className="w-full md:w-auto px-4 py-2 bg-gray-300 rounded disabled:opacity-50">

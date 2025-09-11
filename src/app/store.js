@@ -1,21 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { authApiSlice } from '../features/auth/authApiSlice';
 import authReducer from '../features/auth/authSlice';
 
+import { authApiSlice } from '../features/auth/authApiSlice';
 import { customerApiSlice } from '../features/customers/customerApiSlice';
-
+import {leadApiSlice} from "../features/leads/leadApiSlice";
 
 export const store = configureStore({
     reducer: {
         [authApiSlice.reducerPath]: authApiSlice.reducer,
         [customerApiSlice.reducerPath]: customerApiSlice.reducer,
+        [leadApiSlice.reducerPath]: leadApiSlice.reducer,
         auth: authReducer,
     },
     middleware: (getDefaultMiddleware) => 
         getDefaultMiddleware().concat(
             authApiSlice.middleware,
-            // 3. Add the customer API slice middleware
-            customerApiSlice.middleware
+            customerApiSlice.middleware,
+            leadApiSlice.middleware
         ),
     devTools: true
 });

@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Customers from './pages/Customers';
+import CustomerDetailPage from './pages/CustomerDetailPage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/customers" element={<Customers />} />
             {/* Add other private routes here in the future */}
+            <Route path="/customers/:id" element={<CustomerDetailPage />} />
           </Route>
         </Route>
       </Routes>
