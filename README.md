@@ -1,6 +1,3 @@
-# Mini CRM Application (MERN Stack) - Complete Documentation
-
-```markdown
 # Mini CRM Application (MERN Stack)
 
 This is a complete, full-stack Mini Customer Relationship Management (CRM) application built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It was developed as a comprehensive project demonstrating key web development skills.
@@ -55,7 +52,6 @@ npm run dev
 
 # Run the tests
 npm test
-```
 
 ### 2. Frontend Setup
 
