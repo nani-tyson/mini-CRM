@@ -4,11 +4,13 @@ import { Toaster } from 'react-hot-toast';
 // Components
 import Public from './components/Public';
 import Private from './components/Private';
+import Layout from './components/Layout';
 
 // Pages
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Customers from './pages/Customers';
 
 function App() {
   return (
@@ -23,8 +25,12 @@ function App() {
 
         {/* Private Routes */}
         <Route element={<Private />}>
-          <Route path="/" element={<Dashboard />} />
-          {/* Add other private routes here, e.g., for customers */}
+          {/* All private routes will now have the Header and main layout */}
+          <Route element={<Layout />}> 
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/customers" element={<Customers />} />
+            {/* Add other private routes here in the future */}
+          </Route>
         </Route>
       </Routes>
     </>
