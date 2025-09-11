@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+body {
+  /* Use Tailwind's built-in slate color for a dark background */
+  background-color: theme('colors.slate.900');
+  color: theme('colors.slate.300');
+}

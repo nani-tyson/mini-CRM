@@ -4,16 +4,16 @@ import { useGetStatsQuery } from '../features/dashboard/statsApiSlice';
 import LeadStatusChart from '../features/dashboard/LeadStatusChart';
 import MonthlyPerformanceChart from '../features/dashboard/MonthlyPerformanceChart';
 
-// --- HELPER COMPONENTS (This is the part that was missing) ---
+// --- HELPER COMPONENTS ---
 
 const StatCard = ({ title, value, icon }) => (
-    <div className="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
-        <div className="bg-blue-500 text-white p-3 rounded-full">
+    <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg flex items-center space-x-4 transition-transform transform hover:scale-105">
+        <div className="bg-sky-500 text-white p-3 rounded-full">
             {icon}
         </div>
         <div>
-            <p className="text-sm font-medium text-gray-500">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
+            <p className="text-sm font-medium text-slate-400">{title}</p>
+            <p className="text-2xl font-bold text-white">{value}</p>
         </div>
     </div>
 );
@@ -29,47 +29,34 @@ const Dashboard = () => {
     const user = useSelector(selectCurrentUser);
     const { data: stats, isLoading, isError } = useGetStatsQuery();
 
-    let statsContent;
-    let doughnutChartContent;
-    let barChartContent;
+    let statsContent, doughnutChartContent, barChartContent;
 
     if (isLoading) {
         statsContent = <p>Loading stats...</p>;
-        doughnutChartContent = <p>Loading chart data...</p>;
-        barChartContent = <p>Loading performance data...</p>;
+        doughnutChartContent = <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg flex justify-center items-center min-h-[200px] text-slate-400">Loading chart...</div>;
+        barChartContent = <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg flex justify-center items-center min-h-[200px] text-slate-400">Loading chart...</div>;
     } else if (isError) {
-        statsContent = <p className="text-red-500">Could not load dashboard stats.</p>;
-        doughnutChartContent = <p className="text-red-500">Could not load chart data.</p>;
-        barChartContent = <p className="text-red-500">Could not load performance data.</p>;
+        statsContent = <div className="text-center text-red-500 col-span-full">Could not load dashboard stats.</div>;
+        doughnutChartContent = <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg text-center text-red-500">Could not load chart data.</div>;
+        barChartContent = <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg text-center text-red-500">Could not load chart data.</div>;
     } else {
         statsContent = (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <StatCard 
-                    title="Total Customers" 
-                    value={stats.totalCustomers} 
-                    icon={<UserIcon />} 
-                />
-                <StatCard 
-                    title="Total Leads" 
-                    value={stats.totalLeads} 
-                    icon={<LeadIcon />} 
-                />
-                <StatCard 
-                    title="Converted Value" 
-                    value={`$${stats.convertedLeadsValue.toLocaleString()}`} 
-                    icon={<ValueIcon />}
-                />
+                <StatCard title="Total Customers" value={stats.totalCustomers} icon={<UserIcon />} />
+                <StatCard title="Total Leads" value={stats.totalLeads} icon={<LeadIcon />} />
+                <StatCard title="Converted Value" value={`$${stats.convertedLeadsValue.toLocaleString()}`} icon={<ValueIcon />} />
             </div>
         );
-        doughnutChartContent = <LeadStatusChart data={stats.leadStatusDistribution} />;
-        barChartContent = <MonthlyPerformanceChart data={stats.monthlyPerformance} />;
+        // Use optional chaining and default values for safety
+        doughnutChartContent = <LeadStatusChart data={stats?.leadStatusDistribution || {}} />;
+        barChartContent = <MonthlyPerformanceChart data={stats?.monthlyPerformance || []} />;
     }
 
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p className="mt-2 text-lg text-gray-600">
+                <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+                <p className="mt-2 text-lg text-slate-400">
                     Welcome back, {user?.name || 'User'}! Here's your performance summary.
                 </p>
             </div>

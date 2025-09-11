@@ -1,100 +1,79 @@
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { useMemo } from 'react';
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { useMemo } from "react";
 
-// Register the necessary components for a Bar Chart
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const MonthlyPerformanceChart = ({ data: monthlyData }) => {
-
-    const chartData = useMemo(() => {
-        if (!monthlyData) return { labels: [], datasets: [] };
-
-        // Helper to convert month number to name
-        const getMonthName = (monthNumber) => {
-            const date = new Date();
-            date.setMonth(monthNumber - 1);
-            return date.toLocaleString('en-US', { month: 'short' });
-        }
-
-        const labels = monthlyData.map(d => `${getMonthName(d.month)} ${d.year}`);
-        const totalLeads = monthlyData.map(d => d.totalLeads);
-        const convertedValue = monthlyData.map(d => d.convertedValue);
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: 'Total Leads',
-                    data: totalLeads,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1,
-                    yAxisID: 'y', // Assign to the left y-axis
-                },
-                {
-                    label: 'Converted Value ($)',
-                    data: convertedValue,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    yAxisID: 'y1', // Assign to the right y-axis
-                },
-            ],
-        };
-    }, [monthlyData]);
-
-    const options = {
-        responsive: true,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        plugins: {
-            title: {
-                display: true,
-                text: 'Monthly Leads vs. Converted Value',
-                font: { size: 18 },
-            },
-        },
-        scales: {
-            y: { // Left y-axis for lead count
-                type: 'linear',
-                display: true,
-                position: 'left',
-                title: {
-                    display: true,
-                    text: 'Number of Leads',
-                }
-            },
-            y1: { // Right y-axis for converted value
-                type: 'linear',
-                display: true,
-                position: 'right',
-                title: {
-                    display: true,
-                    text: 'Value ($)',
-                },
-                grid: {
-                    drawOnChartArea: false, // only draw grid lines for the first y-axis
-                },
-            },
-        },
-    };
-
-    if (!monthlyData || monthlyData.length === 0) {
-         return (
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <p className="text-gray-500">Not enough monthly data to display chart.</p>
-            </div>
-        );
+  const chartData = useMemo(() => {
+    // This check is important. If monthlyData is not an array, return a default structure.
+    if (!Array.isArray(monthlyData) || monthlyData.length === 0) {
+      return null; // Return null if there's no data to process
     }
 
+    const getMonthName = (monthNumber) => {
+      /* ... same as before ... */
+    };
+
+    const labels = monthlyData.map((d) => `${getMonthName(d.month)} ${d.year}`);
+    const totalLeads = monthlyData.map((d) => d.totalLeads);
+    const convertedValue = monthlyData.map((d) => d.convertedValue);
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Total Leads",
+          data: totalLeads,
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          yAxisID: "y",
+        },
+        {
+          label: "Converted Value ($)",
+          data: convertedValue,
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          yAxisID: "y1",
+        },
+      ],
+    };
+  }, [monthlyData]);
+
+  const options = {
+    /* ... same as before ... */
+  };
+
+  // If there's no data, show the message
+  if (!chartData) {
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <Bar data={chartData} options={options} />
-        </div>
+      <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg text-center h-full flex items-center justify-center">
+        <p className="text-slate-400">
+          Not enough monthly data to display chart.
+        </p>
+      </div>
     );
+  }
+
+  return (
+    <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg">
+      {/* The final safety check: only render if chartData is valid */}
+      <Bar data={chartData} options={options} />
+    </div>
+  );
 };
 
 export default MonthlyPerformanceChart;

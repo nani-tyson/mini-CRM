@@ -2,14 +2,16 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useMemo } from 'react';
 
+// Register the necessary components for Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// The component now accepts a 'data' prop
 const LeadStatusChart = ({ data: leadStatusData }) => {
 
     const chartData = useMemo(() => {
-        if (!leadStatusData) return { labels: [], datasets: [] };
-        
+        if (!leadStatusData || Object.keys(leadStatusData).length === 0) {
+            return { labels: [], datasets: [] };
+        }
+
         const labels = Object.keys(leadStatusData);
         const data = Object.values(leadStatusData);
 
@@ -26,10 +28,10 @@ const LeadStatusChart = ({ data: leadStatusData }) => {
                         'rgba(255, 99, 132, 0.6)', // Red for Lost
                     ],
                     borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
+                        '#36a2eb',
+                        '#ffce56',
+                        '#4bc0c0',
+                        '#ff6384',
                     ],
                     borderWidth: 1,
                 },
@@ -37,20 +39,38 @@ const LeadStatusChart = ({ data: leadStatusData }) => {
         };
     }, [leadStatusData]);
 
-    const options = { /* ... same as before ... */ };
+    const options = {
+        responsive: true,
+        // --- ADD THIS LINE ---
+        maintainAspectRatio: false, // Important for fitting chart in a container
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: { color: '#cbd5e1' }
+            },
+            title: {
+                display: true,
+                text: 'Lead Status Distribution',
+                color: '#e2e8f0',
+                font: { size: 18 }
+            },
+        },
+    };
 
-    // No need for loading/error states here, the parent will handle it
     if (!leadStatusData || Object.keys(leadStatusData).length === 0) {
         return (
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <p className="text-gray-500">No lead data available to display chart.</p>
+            <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg text-center h-full flex items-center justify-center min-h-[400px]">
+                <p className="text-slate-400">Add a lead to see chart data.</p>
             </div>
         );
     }
     
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <Doughnut data={chartData} options={options} />
+        <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-lg">
+            {/* --- WRAP THE CHART IN A SIZED, RELATIVE CONTAINER --- */}
+            <div className="relative h-80 w-full">
+                <Doughnut data={chartData} options={options} />
+            </div>
         </div>
     );
 };
