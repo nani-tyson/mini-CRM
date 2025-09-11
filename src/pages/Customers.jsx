@@ -22,10 +22,39 @@ const Customers = () => {
   const [updateCustomer] = useUpdateCustomerMutation();
   const [deleteCustomer] = useDeleteCustomerMutation();
 
-  const handleAddClick = () => { /* ... same as before ... */ };
-  const handleEditClick = (customer) => { /* ... same as before ... */ };
-  const handleDeleteClick = async (id) => { /* ... same as before ... */ };
-  const handleFormSubmit = async (formData) => { /* ... same as before ... */ };
+  const handleAddClick = () => {
+    setEditingCustomer(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditClick = (customer) => {
+    setEditingCustomer(customer);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = async (id) => {
+    try {
+      await deleteCustomer(id).unwrap();
+      toast.success("Customer deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete customer");
+    }
+  };
+
+  const handleFormSubmit = async (formData) => {
+    try {
+      if (editingCustomer) {
+        await updateCustomer({ id: editingCustomer._id, ...formData }).unwrap();
+        toast.success("Customer updated successfully");
+      } else {
+        await addCustomer(formData).unwrap();
+        toast.success("Customer added successfully");
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      toast.error("Failed to save customer");
+    }
+  };
 
   let content;
 
