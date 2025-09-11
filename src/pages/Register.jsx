@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRegisterMutation } from '../features/auth/authApiSlice';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../features/auth/authSlice';
 import toast from 'react-hot-toast';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const { name, email, password } = formData;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [register, { isLoading }] = useRegisterMutation();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,9 +17,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({ name, email, password }).unwrap();
+      const response = await register({ name, email, password }).unwrap();
       toast.success('Registration successful! Please log in.');
-      
+      dispatch(setCredentials({user: response.user ,token: response.token })); 
       navigate('/');
     } catch (err) {
       toast.error(err.data?.msg || 'Registration failed');

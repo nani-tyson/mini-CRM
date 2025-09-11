@@ -23,7 +23,8 @@ const Login = () => {
             const response = await login({ email, password }).unwrap();
             
             // We use the dispatch function to send the action with the token to our authSlice
-            dispatch(setCredentials({ token: response.token })); // Assuming backend returns { token: '...' }
+            console.log('Login Response:', response);
+            dispatch(setCredentials({user: response.user ,token: response.token })); // Assuming backend returns { token: '...' }
             
             toast.success('Login successful!');
             navigate('/'); // Navigate to the dashboard
